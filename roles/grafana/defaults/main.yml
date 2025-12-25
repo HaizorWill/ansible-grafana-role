@@ -1,0 +1,19 @@
+---
+grafana_bin_uri: "https://dl.grafana.com/grafana/release/12.3.1/grafana_12.3.1_20271043721_linux_amd64.tar.gz"
+# grafana packages contain build id, and there is seemingly no way of discovering it dynamically
+# that is why you should go and grab a link for yourself and paste it, instead of using
+# variables such as version, edition, etc.
+grafana_dir: "/usr/local/grafana"
+# grafana_path is the path in which unit will search for bin/grafana-server binary
+# and which will be used as working directory for the unit
+grafana_conf_dir: "/etc/grafana"
+grafana_unit_dir: "/usr/lib/systemd/system"
+grafana_log_dir: "/var/log/grafana"
+grafana_data_dir: "/var/lib/grafana"
+grafana_restart_on: "always"
+grafana_runtime_directory: "grafana"
+grafana_runtime_directory_mode: "0750"
+grafana_unit_options:
+  LimitNOFILE: 10000
+grafana_user: "grafana"
+grafana_group: "grafana"
