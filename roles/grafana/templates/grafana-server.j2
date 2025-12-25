@@ -1,0 +1,25 @@
+GRAFANA_USER={{ grafana_user }}
+
+GRAFANA_GROUP={{ grafana_group }}
+
+GRAFANA_HOME={{ grafana_dir }}
+
+LOG_DIR={{ grafana_log_dir }}
+
+DATA_DIR={{ grafana_data_dir }}
+
+{% if grafana_unit_options.LimitNOFILE is defined %}
+MAX_OPEN_FILES={{ grafana_unit_options.LimitNOFILE }}
+{% endif %}
+
+CONF_DIR={{ grafana_conf_dir }}
+
+CONF_FILE={{ grafana_conf_dir}}/grafana.ini
+
+RESTART_ON_UPGRADE=true
+
+PLUGINS_DIR=
+
+PROVISIONING_CFG_DIR={{ grafana_conf_dir }}/provisioning
+
+PID_FILE_DIR=/run/grafana
