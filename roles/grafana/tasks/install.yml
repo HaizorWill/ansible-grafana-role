@@ -1,0 +1,59 @@
+---
+- name: grafana | group is present
+  ansible.builtin.group:
+    name: "{{ grafana_group }}"
+    state: "present"
+
+- name: grafana | user is present
+  ansible.builtin.user:
+    name: "{{ grafana_user }}"
+    group: "{{ grafana_group }}"
+    state: "present"
+    system: true
+    shell: "/bin/false"
+
+- name: grafana | ensure directories exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    owner: "{{ item.owner | default(grafana_user) }}"
+    group: "{{ item.group | default(grafana_group) }}"
+    mode: "{{ item.mode | default(755) }}"
+    state: "directory"
+  loop:
+    - path: "{{ grafana_dir }}"
+      owner: root
+      group: root
+    - path: "{{ grafana_conf_dir }}"
+      owner: root
+      group: root
+    - path: "{{ grafana_provision_dir }}"
+      owner: root
+    - path: "{{ grafana_log_dir }}"
+    - path: "{{ grafana_data_dir }}"
+    - path: "{{ grafana_plugins_dir }}"
+      mode: "750"
+    - path: "/run/grafana"
+      mode: "750"
+
+- name: grafana | binary is unarchived
+  ansible.builtin.unarchive:
+    src: "{{ grafana_bin_uri }}"
+    dest: "{{ grafana_dir }}"
+    owner: "root"
+    group: "root"
+    remote_src: "yes"
+    extra_opts:
+      - "--strip-components=1"
+    creates: "{{ grafana_dir }}/bin/grafana-server"
+
+- name: grafana | default parameters file is generated
+  ansible.builtin.template:
+    src: "templates/grafana-server.j2"
+    dest: "/etc/default/grafana-server"
+
+- name: grafana | unit file is generated
+  ansible.builtin.template:
+    src: "templates/grafana.service.j2"
+    dest: "{{ grafana_unit_dir }}/grafana-server.service"
+  notify:
+    - systemd daemon-reload
