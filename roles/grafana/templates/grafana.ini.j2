@@ -1,0 +1,25 @@
+### Grafana config file ###
+app_mode = {{ grafana_app_mode }}
+instance_name = {{ grafana_instance_name }}
+
+[paths]
+data = {{ grafana_data_dir }}
+temp_data_lifetime = {{ grafana_temp_data_lifetime }}
+logs = {{ grafana_log_dir }}
+plugins = {{ grafana_plugins_dir }}
+provisioning = {{ grafana_provision_dir }}
+
+[server]
+
+[database]
+{% if grafana_database_type is "sqlite3" %}
+type = sqlite3
+{% endif %}
+
+[remote_cache]
+{% if grafana_use_remote_cache is true %}
+{% endif %}
+
+[dataproxy]
+
+[analytics]

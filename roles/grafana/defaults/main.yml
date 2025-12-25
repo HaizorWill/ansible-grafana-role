@@ -50,3 +50,7 @@ grafana_unit_options: {}
 # SystemCallArchitectures: "native"
 # UMask: "0027"
 
+grafana_app_mode: "development"
+grafana_instance_name: "${HOSTNAME}"
+grafana_temp_data_lifetime: "24h"
+grafana_use_remote_cache: false
