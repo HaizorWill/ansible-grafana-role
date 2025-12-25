@@ -14,12 +14,12 @@ MAX_OPEN_FILES={{ grafana_unit_options.LimitNOFILE }}
 
 CONF_DIR={{ grafana_conf_dir }}
 
-CONF_FILE={{ grafana_conf_dir}}/grafana.ini
+CONF_FILE={{ grafana_conf_dir }}/grafana.ini
 
 RESTART_ON_UPGRADE=true
 
-PLUGINS_DIR=
+PLUGINS_DIR={{ grafana_plugins_dir }}
 
-PROVISIONING_CFG_DIR={{ grafana_conf_dir }}/provisioning
+PROVISIONING_CFG_DIR={{ grafana_provision_dir }}
 
 PID_FILE_DIR=/run/grafana

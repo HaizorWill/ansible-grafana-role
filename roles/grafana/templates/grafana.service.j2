@@ -14,7 +14,12 @@ WorkingDirectory={{ grafana_path }}
 RuntimeDirectory={{ grafana_runtime_directory }}
 RuntimeDirectoryMode={{ grafana_runtime_directory_mode }}
 ExecStart={{ grafana_path }}/bin/grafana-server --config={{ grafana_conf_path }}/grafana.ini \
-          --config=
+                             --config=${CONF_FILE} \
+                             --pidfile=${PID_FILE_DIR}/grafana-server.pid \
+                             cfg:default.paths.logs=${LOG_DIR} \
+                             cfg:default.paths.data=${DATA_DIR} \
+                             cfg:default.paths.plugins=${PLUGINS_DIR} \
+                             cfg:default.paths.provisioning=${PROVISIONING_CFG_DIR}
 Restart={{ grafana_restart_on }}
 {% for opt, value in grafana_unit_options.items() %}
 {{ opt }}={{ value }}
