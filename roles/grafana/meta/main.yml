@@ -1,0 +1,10 @@
+galaxy_info:
+  author: HaizorWill
+  description: An ansible role meant to automate the process of deploying and configuring Grafana from binary
+  license: MIT
+  min_ansible_version: 2.9
+  galaxy_tags:
+    - grafana
+    - dashboard
+    - monitoring
+dependencies: []
