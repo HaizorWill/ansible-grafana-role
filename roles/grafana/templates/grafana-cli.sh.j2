@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+
+DEFAULT=/etc/default/grafana
+
+GRAFANA_HOME="${GRAFANA_HOME:-{{ grafana_dir }}}"
+
+CONF_DIR={{ grafana_conf_dir }}
+DATA_DIR={{ grafana_data_dir }}
+PLUGINS_DIR={{ grafana_plugins_dir }}
+LOG_DIR={{ grafana_log_dir }}
+
+CONF_FILE=$CONF_DIR/grafana.ini
+PROVISIONING_CFG_DIR={{ grafana_provision_dir }}
+
+EXECUTABLE="$GRAFANA_HOME/bin/grafana"
+
+if [ ! -x $EXECUTABLE ]; then
+  echo "$EXECUTABLE not installed or not executable"
+  exit 5
+fi
+
+if [ -f "$DEFAULT" ]; then
+  . "$DEFAULT"
+fi
+
+OPTS="--homepath=${GRAFANA_HOME} \
+      --config=${CONF_FILE} \
+      --pluginsDir=${PLUGINS_DIR} \
+      --configOverrides='cfg:default.paths.provisioning=$PROVISIONING_CFG_DIR \
+      cfg:default.paths.data=${DATA_DIR} \
+      cfg:default.paths.logs=${LOG_DIR} \
+      cfg:default.paths.plugins=${PLUGINS_DIR}'"
+
+CMD=cli
+
+eval $EXECUTABLE "$CMD" "$OPTS" "$@"

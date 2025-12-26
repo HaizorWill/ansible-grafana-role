@@ -1,0 +1,14 @@
+#! /usr/bin/env bash
+
+GRAFANA_HOME="${GRAFANA_HOME:-{{ grafana_dir }}}"
+
+EXECUTABLE="$GRAFANA_HOME/bin/grafana"
+
+if [ ! -x $EXECUTABLE ]; then
+  echo "$EXECUTABLE not installed or not executable"
+  exit 5
+fi
+
+CMD=server
+
+eval $EXECUTABLE "$CMD" "$@"
