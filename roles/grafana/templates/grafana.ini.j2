@@ -1,25 +1,23 @@
 ### Grafana config file ###
-app_mode = {{ grafana_app_mode }}
-instance_name = {{ grafana_instance_name }}
-
-[paths]
-data = {{ grafana_data_dir }}
-temp_data_lifetime = {{ grafana_temp_data_lifetime }}
-logs = {{ grafana_log_dir }}
-plugins = {{ grafana_plugins_dir }}
-provisioning = {{ grafana_provision_dir }}
-
-[server]
-
-[database]
-{% if grafana_database_type is "sqlite3" %}
-type = sqlite3
+{% for option, value in grafana_ini.items() %}
+{% if value is not mapping %}
+{{ option }} = {{ value }}
 {% endif %}
+{% endfor %}
+{% for section, item in grafana_ini.items() %}
+{% if item is mapping %}
 
-[remote_cache]
-{% if grafana_use_remote_cache is true %}
+[{{ section }}]
+{% for option, value in item.items() %}
+{% if value is mapping %}
+
+[{{ section }}.{{ option }}]
+{% for opt, val in value.items() %}
+{{ opt }} = {{ val }}
+{% endfor %}
+{% else %}
+{{ option }} = {{ value }}
 {% endif %}
-
-[dataproxy]
-
-[analytics]
+{% endfor %}
+{% endif %}
+{% endfor %}
