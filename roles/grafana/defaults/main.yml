@@ -6,6 +6,7 @@ grafana_group: "grafana"
 grafana_bin_uri: "https://dl.grafana.com/grafana/release/12.3.1/grafana_12.3.1_20271043721_linux_amd64.tar.gz"
 
 grafana_unit_dir: "/usr/lib/systemd/system"
+grafana_exec_dir: "/usr/sbin/"
 # these directories should be subdirectories of a more global
 # directory, since the ownership will be overwritten, and in case
 # of directories like /var/lib it can lead to ownership problems
@@ -47,7 +48,7 @@ grafana_unit_options: {}
 #  SystemCallArchitectures: "native"
 #  UMask: "0027"
 
-grafana_ini:
+grafana_ini_default:
   app_mode: "development"
   instance_name: "${HOSTNAME}"
 
@@ -74,3 +75,39 @@ grafana_ini:
     #cert_key: certkey
     #cert_pass: certpass
     #certs_watch_interval: 60m
+    #custom_respone_headers: {}
+
+  environment: {}
+  database:
+    type: sqlite3
+    #host: 127.0.0.1:3306
+    #name: grafana
+    #user: root
+    #password: secret
+
+  remote_cache:
+    type: database
+    #connstr: 127.0.0.1:11211
+    #prefix: prefix
+    #encryption: true
+
+  dataproxy: {}
+  
+  analytics: {}
+
+  security:
+    disable_initial_admin_creation: false
+    admin_user: admin
+    admin_password: ""
+    admin_email: "admin@localhost"
+    #secret_key: AES-256-CFB
+
+  users:
+    allow_sign_up: false
+    auto_assign_org_role: Viewer
+    default_theme: dark
+
+  auth:
+    disable_login_form: false
+    disable_signout_menu: false
+    #signout_redirect_url: sso.localhost
