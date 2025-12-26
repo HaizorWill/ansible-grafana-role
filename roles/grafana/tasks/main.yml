@@ -12,7 +12,3 @@
     file: "configure.yml"
     apply:
       become: true
-- name: grafana is enabled and started
-  ansible.builtin.shell: echo
-  notify:
-    - enable grafana service
