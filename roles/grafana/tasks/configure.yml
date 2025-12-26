@@ -1,0 +1,5 @@
+---
+- name: grafana | config is generated
+  ansible.builtin.template:
+    src: "templates/grafana.ini.j2"
+    dest: "{{ grafana_conf_dir }}/grafana.ini"
