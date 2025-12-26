@@ -1,7 +1,18 @@
 ---
-- name: grafana | grafana is installed
+- name: combine default vars
+  ansible.builtin.set_fact:
+    grafana_ini: "{{ grafana_ini_default | ansible.builtin.combine(grafana_ini | default({}), recursive=true) }}"
+- name: grafana is installed
   ansible.builtin.include_tasks:
     file: "install.yml"
-- name: grafana | grafana is configured
+    apply:
+      become: true
+- name: grafana is configured
   ansible.builtin.include_tasks:
     file: "configure.yml"
+    apply:
+      become: true
+- name: grafana is enabled and started
+  ansible.builtin.shell: echo
+  notify:
+    - enable grafana service
