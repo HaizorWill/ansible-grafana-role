@@ -17,7 +17,7 @@
     path: "{{ item.path }}"
     owner: "{{ item.owner | default(grafana_user) }}"
     group: "{{ item.group | default(grafana_group) }}"
-    mode: "{{ item.mode | default(755) }}"
+    mode: "{{ item.mode | default('755') }}"
     state: "directory"
   loop:
     - path: "{{ grafana_dir }}"
