@@ -1,10 +1,10 @@
 ---
-- name: grafana | group is present
+- name: install.yml | group is present
   ansible.builtin.group:
     name: "{{ grafana_group }}"
     state: "present"
 
-- name: grafana | user is present
+- name: install.yml | user is present
   ansible.builtin.user:
     name: "{{ grafana_user }}"
     group: "{{ grafana_group }}"
@@ -12,12 +12,12 @@
     system: true
     shell: "/bin/false"
 
-- name: grafana | ensure directories exist
+- name: install.yml | ensure directories exist
   ansible.builtin.file:
     path: "{{ item.path }}"
     owner: "{{ item.owner | default(grafana_user) }}"
     group: "{{ item.group | default(grafana_group) }}"
-    mode: "{{ item.mode | default('755') }}"
+    mode: "{{ item.mode | default('0755') }}"
     state: "directory"
   loop:
     - path: "{{ grafana_dir }}"
@@ -31,11 +31,11 @@
     - path: "{{ grafana_log_dir }}"
     - path: "{{ grafana_data_dir }}"
     - path: "{{ grafana_plugins_dir }}"
-      mode: "750"
+      mode: "0750"
     - path: "/run/grafana"
-      mode: "750"
+      mode: "0750"
 
-- name: grafana | binary is unarchived
+- name: install.yml | binary is unarchived
   ansible.builtin.unarchive:
     src: "{{ grafana_bin_uri }}"
     dest: "{{ grafana_dir }}"
@@ -46,14 +46,30 @@
       - "--strip-components=1"
     creates: "{{ grafana_dir }}/bin/grafana-server"
 
-- name: grafana | default parameters file is generated
+- name: install.yml | default parameters file is generated
   ansible.builtin.template:
     src: "templates/grafana-server.j2"
     dest: "/etc/default/grafana-server"
 
-- name: grafana | unit file is generated
+- name: install.yml | unit file is generated
   ansible.builtin.template:
     src: "templates/grafana.service.j2"
     dest: "{{ grafana_unit_dir }}/grafana-server.service"
   notify:
     - systemd daemon-reload
+
+- name: install.yml | grafana server executable is generated
+  ansible.builtin.template:
+    src: "templates/grafana-server.sh.j2"
+    dest: "{{ grafana_exec_dir }}/grafana-server"
+    owner: "root"
+    group: "root"
+    mode: "0755"
+
+- name: install.yml | grafana client executable is generated
+  ansible.builtin.template:
+    src: "templates/grafana-cli.sh.j2"
+    dest: "{{ grafana_exec_dir }}/grafana-cli"
+    owner: "root"
+    group: "root"
+    mode: "0755"
