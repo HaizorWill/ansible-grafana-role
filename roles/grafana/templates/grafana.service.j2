@@ -13,7 +13,7 @@ Type=simple
 WorkingDirectory={{ grafana_dir }}
 RuntimeDirectory={{ grafana_runtime_directory }}
 RuntimeDirectoryMode={{ grafana_runtime_directory_mode }}
-ExecStart={{ grafana_dir }}/bin/grafana-server --config={{ grafana_conf_dir }}/grafana.ini \
+ExecStart={{ grafana_dir }}/bin/grafana server --config={{ grafana_conf_dir }}/grafana.ini \
                              --config=${CONF_FILE} \
                              --pidfile=${PID_FILE_DIR}/grafana-server.pid \
                              cfg:default.paths.logs=${LOG_DIR} \
@@ -22,7 +22,9 @@ ExecStart={{ grafana_dir }}/bin/grafana-server --config={{ grafana_conf_dir }}/g
                              cfg:default.paths.provisioning=${PROVISIONING_CFG_DIR}
 Restart={{ grafana_restart_on }}
 {% for opt, val in grafana_unit_options.items() %}
+{% if val is not mapping %}
 {{ opt }}={{ val }}
+{% endif %}
 {% endfor %}
 
 [Install]
