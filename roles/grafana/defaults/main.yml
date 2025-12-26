@@ -1,56 +1,76 @@
 ---
 grafana_user: "grafana"
 grafana_group: "grafana"
-grafana_bin_uri: "https://dl.grafana.com/grafana/release/12.3.1/grafana_12.3.1_20271043721_linux_amd64.tar.gz"
 # grafana packages contain build id, and there is seemingly no way of discovering it dynamically
-# that is why you should go and grab a link for yourself and paste it, instead of using
-# variables such as version, edition, etc.
-grafana_dir: "/usr/local/grafana"
-# grafana_dir is the path in which unit will search for bin/grafana-server binary
-# and which will be used as working directory for the unit
+# you should grab a link for yourself and paste it, instead of using variables such as version, etc.
+grafana_bin_uri: "https://dl.grafana.com/grafana/release/12.3.1/grafana_12.3.1_20271043721_linux_amd64.tar.gz"
+
 grafana_unit_dir: "/usr/lib/systemd/system"
-####################################
+# these directories should be subdirectories of a more global
+# directory, since the ownership will be overwritten, and in case
+# of directories like /var/lib it can lead to ownership problems
+grafana_dir: "/usr/local/grafana"
 grafana_conf_dir: "/etc/grafana"
 grafana_log_dir: "/var/log/grafana"
 grafana_data_dir: "/var/lib/grafana"
 grafana_plugins_dir: "{{ grafana_data_dir }}/plugins"
 grafana_provision_dir: "{{ grafana_conf_dir }}/provisioning"
-# these directories should be subdirectories of a more global
-# directory, since the ownership will be overwritten, and in case
-# of directories like /var/lib it can lead to ownership problems
 grafana_runtime_directory: "grafana"
 grafana_runtime_directory_mode: "0750"
+
 grafana_restart_on: "always"
-
 grafana_unit_options: {}
-# LimitNOFILE: "10000"
-# TimeoutStopSec: "20"
-# AmbientCapabilities: "CAP_NET_BIND_SERVICE"
-# CapabilityBoundingSet: "CAP_NET_BIND_SERVICE"
-# DeviceAllow: ""
-# LockPersonality: "true"
-# MemoryDenyWriteExecute: "false"
-# NoNewPrivileges: "true"
-# PrivateDevices: "true"
-# PrivateTmp: "true"
-# ProtectClock: "true"
-# ProtectControlGroups: "true"
-# ProtectHome: "true"
-# ProtectHostname: "true"
-# ProtectKernelLogs: "true"
-# ProtectKernelModules: "true"
-# ProtectKernelTunables: "true"
-# ProtectProc: "invisible"
-# ProtectSystem: "full"
-# RemoveIPC: "true"
-# RestrictAddressFamilies: "AF_INET AF_INET6 AF_UNIX"
-# RestrictNamespaces: "true"
-# RestrictRealtime: "true"
-# RestrictSUIDSGID: "true"
-# SystemCallArchitectures: "native"
-# UMask: "0027"
+#  LimitNOFILE: "10000"
+#  TimeoutStopSec: "20"
+#  AmbientCapabilities: "CAP_NET_BIND_SERVICE"
+#  CapabilityBoundingSet: "CAP_NET_BIND_SERVICE"
+#  DeviceAllow: ""
+#  LockPersonality: "true"
+#  MemoryDenyWriteExecute: "false"
+#  NoNewPrivileges: "true"
+#  PrivateDevices: "true"
+#  PrivateTmp: "true"
+#  ProtectClock: "true"
+#  ProtectControlGroups: "true"
+#  ProtectHome: "true"
+#  ProtectHostname: "true"
+#  ProtectKernelLogs: "true"
+#  ProtectKernelModules: "true"
+#  ProtectKernelTunables: "true"
+#  ProtectProc: "invisible"
+#  ProtectSystem: "full"
+#  RemoveIPC: "true"
+#  RestrictAddressFamilies: "AF_INET AF_INET6 AF_UNIX"
+#  RestrictNamespaces: "true"
+#  RestrictRealtime: "true"
+#  RestrictSUIDSGID: "true"
+#  SystemCallArchitectures: "native"
+#  UMask: "0027"
 
-grafana_app_mode: "development"
-grafana_instance_name: "${HOSTNAME}"
-grafana_temp_data_lifetime: "24h"
-grafana_use_remote_cache: false
+grafana_ini:
+  app_mode: "development"
+  instance_name: "${HOSTNAME}"
+
+  paths:
+    data: "{{ grafana_data_dir }}"
+    temp_data_lifetime: "24h"
+    logs: "{{ grafana_log_dir }}"
+    plugins: "{{ grafana_plugins_dir }}"
+    provisioning: "{{ grafana_provision_dir }}"
+
+  server:
+    protocol: http
+    #min_tls_version: TLS1.2
+    http_addr: 0.0.0.0
+    http_port: 3000
+    #domain: example.com
+    enforce_domain: false
+    root_url: "%(protocol)s://%(domain)s:%(http_port)s/"
+    serve_from_sub_path: false
+    router_logging: true
+    static_root_path: public
+    enable_gzip: false
+    #cert_file: certfile
+    #cert_key: certkey
+    #cert_pass: certpass
+    #certs_watch_interval: 60m
