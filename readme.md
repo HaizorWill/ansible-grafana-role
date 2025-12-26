@@ -9,6 +9,10 @@ All variables are defined in `defaults/main.yml` and can be overriden.
 
 Here are variables which you are most likely to use:
 ```yaml
+# Activates or deactivates tasks
+grafana_install: true
+grafana_configure: true
+
 # Grafana binary URI which will be used for installation
 grafana_bin_uri: "https://dl.grafana.com/grafana/release/12.3.1/grafana_12.3.1_20271043721_linux_amd64.tar.gz"
 

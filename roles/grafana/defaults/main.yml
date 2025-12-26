@@ -1,4 +1,6 @@
 ---
+grafana_install: true
+grafana_configure: true
 grafana_user: "grafana"
 grafana_group: "grafana"
 # grafana packages contain build id, and there is seemingly no way of discovering it dynamically

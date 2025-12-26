@@ -7,8 +7,10 @@
     file: "install.yml"
     apply:
       become: true
+  when: grafana_install
 - name: grafana is configured
   ansible.builtin.include_tasks:
     file: "configure.yml"
     apply:
       become: true
+  when: grafana_configure
