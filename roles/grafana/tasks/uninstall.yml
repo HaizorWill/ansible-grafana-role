@@ -2,26 +2,49 @@
 - name: uninstall.yml | config is removed
   ansible.builtin.file:
     path: "{{ grafana_conf_dir }}/grafana.ini"
-    state: absent
+    state: "absent"
   when: grafana_role.uninstall_opts.remove_conf
 
 - name: uninstall.yml | unit is removed
   ansible.builtin.file:
     path: "{{ grafana_unit_dir }}/grafana-server.service"
-    state: absent
+    state: "absent"
   when: grafana_role.uninstall_opts.remove_unit
 
 - name: uninstall.yml | executables are removed
   ansible.builtin.file:
     path: "{{ grafana_exec_dir }}/{{ item }}"
-    state: absent
+    state: "absent"
   loop:
-    - grafana-server
-    - grafana-cli
+    - "grafana-server"
+    - "grafana-cli"
   when: grafana_role.uninstall_opts.remove_executables
+
+- name: uninstall.yml | grafana files are found
+  ansible.builtin.find:
+    paths: "{{ grafana_dir }}"
+    file_type: "any"
+  register: grafana_files_found
 
 - name: uninstall.yml | grafana is removed
   ansible.builtin.file:
-    path: "{{ grafana_dir }}"
-    state: absent
+    path: "{{ item.path }}"
+    state: "absent"
+  loop: "{{ grafana_files_found.files }}"
+  loop_control:
+    label: "{{ item.path }}"
   when: grafana_role.uninstall_opts.remove_grafana
+
+- name: uninstall.yml | directories are removed
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: "absent"
+  loop:
+    - "{{ grafana_dir }}"
+    - "{{ grafana_provision_dir }}"
+    - "{{ grafana_conf_dir }}"
+    - "{{ grafana_log_dir }}"
+    - "{{ grafana_plugins_dir }}"
+    - "{{ grafana_data_dir }}"
+    - "/run/grafana"
+  when: grafana_role.uninstall_opts.remove_dirs
