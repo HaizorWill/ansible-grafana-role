@@ -2,15 +2,24 @@
 - name: combine default vars
   ansible.builtin.set_fact:
     grafana_ini: "{{ grafana_ini_default | ansible.builtin.combine(grafana_ini | default({}), recursive=true) }}"
+
+- name: grafana is uninstalled
+  ansible.builtin.include_tasks:
+    file: "uninstall.yml"
+    apply:
+      become: true
+  when: grafana_role.uninstall
+
 - name: grafana is installed
   ansible.builtin.include_tasks:
     file: "install.yml"
     apply:
       become: true
-  when: grafana_install
+  when: grafana_role.install
+
 - name: grafana is configured
   ansible.builtin.include_tasks:
     file: "configure.yml"
     apply:
       become: true
-  when: grafana_configure
+  when: grafana_role.configure
