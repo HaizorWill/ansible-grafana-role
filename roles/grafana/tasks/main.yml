@@ -2,6 +2,7 @@
 - name: combine default vars
   ansible.builtin.set_fact:
     grafana_ini: "{{ grafana_ini_default | ansible.builtin.combine(grafana_ini | default({}), recursive=true) }}"
+    grafana_role: "{{ grafana_role_default | ansible.builtin.combine(grafana_role | default({}), recursive=true)}}"
 
 - name: grafana is uninstalled
   ansible.builtin.include_tasks:
