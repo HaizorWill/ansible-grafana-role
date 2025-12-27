@@ -1,6 +1,13 @@
 ---
-grafana_install: true
-grafana_configure: true
+grafana_role:
+  install: true
+  configure: true
+  uninstall: false
+  uninstall_opts:
+    remove_unit: false
+    remove_conf: false
+    remove_executables: false
+    remove_grafana: false
 grafana_user: "grafana"
 grafana_group: "grafana"
 # grafana packages contain build id, and there is seemingly no way of discovering it dynamically
