@@ -5,12 +5,6 @@
     state: "absent"
   when: grafana_role.uninstall_opts.remove_conf
 
-- name: uninstall.yml | unit is removed
-  ansible.builtin.file:
-    path: "{{ grafana_unit_dir }}/grafana-server.service"
-    state: "absent"
-  when: grafana_role.uninstall_opts.remove_unit
-
 - name: uninstall.yml | executables are removed
   ansible.builtin.file:
     path: "{{ grafana_exec_dir }}/{{ item }}"
@@ -34,6 +28,15 @@
   loop_control:
     label: "{{ item.path }}"
   when: grafana_role.uninstall_opts.remove_grafana
+
+- name: uninstall.yml | unit is removed
+  ansible.builtin.file:
+    path: "{{ grafana_unit_dir }}/grafana-server.service"
+    state: "absent"
+  when: grafana_role.uninstall_opts.remove_unit
+  notify:
+    - disable grafana service
+    - systemd daemon-reload
 
 - name: uninstall.yml | directories are removed
   ansible.builtin.file:
